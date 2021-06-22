@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.</declaration>
+	<template>
+		<name x="5" y="5">Door</name>
+		<parameter>broadcast chan &amp;Open, broadcast chan &amp;Close</parameter>
+		<declaration>// Place local declarations here.
+clock t;
+int movingDirection = 0;</declaration>
+		<location id="id0" x="51" y="42">
+			<name x="59" y="8">doorClose</name>
+		</location>
+		<location id="id1" x="467" y="42">
+			<name x="484" y="34">doorOpening</name>
+			<label kind="invariant" x="484" y="51">t&lt;=1</label>
+		</location>
+		<location id="id2" x="467" y="263">
+			<name x="391" y="229">doorOpen</name>
+			<label kind="invariant" x="484" y="229">t&lt;=5</label>
+		</location>
+		<location id="id3" x="51" y="263">
+			<name x="-51" y="246">doorClosing</name>
+			<label kind="invariant" x="0" y="263">t&lt;=1</label>
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id3"/>
+			<label kind="guard" x="170" y="170">movingDirection == 0</label>
+			<label kind="synchronisation" x="348" y="187">Close?</label>
+			<label kind="assignment" x="340" y="153">t=0</label>
+			<nail x="382" y="170"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-25" y="-25">Close?</label>
+			<nail x="51" y="-34"/>
+			<nail x="-68" y="-34"/>
+			<nail x="-68" y="42"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id1"/>
+			<label kind="guard" x="221" y="102">movingDirection == 0</label>
+			<label kind="synchronisation" x="178" y="85">Open?</label>
+			<label kind="assignment" x="178" y="119">t=0</label>
+			<nail x="170" y="119"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id2"/>
+			<label kind="guard" x="450" y="340">movingDirection == 0</label>
+			<label kind="synchronisation" x="510" y="306">Open?</label>
+			<label kind="assignment" x="518" y="323">t=0</label>
+			<nail x="467" y="339"/>
+			<nail x="586" y="339"/>
+			<nail x="586" y="263"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id0"/>
+			<label kind="guard" x="59" y="136">t&gt;=0</label>
+			<label kind="assignment" x="59" y="153">t=0</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="195" y="229">movingDirection == 0</label>
+			<label kind="synchronisation" x="246" y="246">Close?</label>
+			<label kind="assignment" x="255" y="263">t=0</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="476" y="136">t&gt;=0</label>
+			<label kind="assignment" x="476" y="153">t=0</label>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="178" y="8">movingDirection == 0</label>
+			<label kind="synchronisation" x="221" y="25">Open?</label>
+			<label kind="assignment" x="230" y="42">t=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>FloorUI</name>
+		<parameter>broadcast chan &amp;Open, broadcast chan &amp;Close, broadcast chan &amp;Call, broadcast chan &amp;FloorArrived</parameter>
+		<location id="id4" x="8" y="-8">
+			<name x="-68" y="-17">WaitCall</name>
+		</location>
+		<location id="id5" x="161" y="-8">
+			<name x="187" y="-17">Called</name>
+			<urgent/>
+		</location>
+		<location id="id6" x="9" y="102">
+			<name x="-25" y="119">CallDown</name>
+			<urgent/>
+		</location>
+		<location id="id7" x="8" y="-119">
+			<name x="-17" y="-153">CallUp</name>
+			<urgent/>
+		</location>
+		<location id="id8" x="-365" y="76">
+			<name x="-348" y="67">DoorOpen</name>
+		</location>
+		<location id="id9" x="-297" y="-119">
+			<name x="-323" y="-153">Arrived</name>
+			<urgent/>
+		</location>
+		<init ref="id4"/>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-170" y="-68">FloorArrived?</label>
+			<nail x="-144" y="-119"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-221" y="76">Close?</label>
+			<nail x="-365" y="102"/>
+			<nail x="-144" y="102"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-357" y="-34">Open?</label>
+			<nail x="-365" y="-119"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id5"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id5"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="17" y="34">Call?</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="17" y="-68">Call?</label>
+		</transition>
+	</template>
+	<template>
+		<name>User</name>
+		<parameter>broadcast chan &amp;Open, broadcast chan &amp;Close, broadcast chan &amp;Call, broadcast chan &amp;CallF3, broadcast chan &amp;CallF2, broadcast chan &amp;CallF1, broadcast chan &amp;CallFB</parameter>
+		<declaration>clock t;</declaration>
+		<location id="id10" x="-425" y="-110">
+			<name x="-476" y="-119">Start</name>
+		</location>
+		<location id="id11" x="-178" y="-110">
+			<name x="-161" y="-119">ButtonPressed</name>
+			<urgent/>
+		</location>
+		<location id="id12" x="-178" y="25">
+			<name x="-161" y="17">Called</name>
+			<urgent/>
+		</location>
+		<init ref="id10"/>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="-280" y="-51">Call!</label>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-323" y="135">CallFB!</label>
+			<nail x="-391" y="152"/>
+			<nail x="-212" y="152"/>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-323" y="93">CallF1!</label>
+			<nail x="-391" y="110"/>
+			<nail x="-212" y="110"/>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-323" y="51">CallF2!</label>
+			<nail x="-391" y="68"/>
+			<nail x="-212" y="68"/>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-323" y="8">CallF3!</label>
+			<nail x="-391" y="25"/>
+			<nail x="-212" y="25"/>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="-323" y="-221">Close!</label>
+			<nail x="-391" y="-204"/>
+			<nail x="-212" y="-204"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id10"/>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="-323" y="-178">Open!</label>
+			<nail x="-391" y="-161"/>
+			<nail x="-212" y="-161"/>
+		</transition>
+	</template>
+	<template>
+		<name>Scheduler</name>
+		<parameter>broadcast chan &amp;Elevator1, broadcast chan &amp;Elevator2</parameter>
+		<declaration>int H_E1 = 0;
+int H_E2 = 0;
+int Distance_E1 = 1;
+int Distance_E2 = 1;</declaration>
+		<location id="id13" x="-93" y="-204">
+			<name x="-110" y="-187">Start</name>
+			<urgent/>
+		</location>
+		<location id="id14" x="-374" y="-204">
+			<name x="-433" y="-212">High</name>
+			<urgent/>
+		</location>
+		<location id="id15" x="195" y="-204">
+			<name x="221" y="-212">Low</name>
+			<urgent/>
+		</location>
+		<location id="id16" x="-93" y="-408">
+			<name x="-110" y="-442">Equal</name>
+			<urgent/>
+		</location>
+		<init ref="id13"/>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id15"/>
+			<label kind="guard" x="25" y="-348">Distance_E1 &lt;= Distance_E2</label>
+		</transition>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id14"/>
+			<label kind="guard" x="-391" y="-348">Distance_E1 &gt; Distance_E2</label>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id16"/>
+			<label kind="guard" x="-85" y="-297">H_E1 == H_E2</label>
+		</transition>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="119" y="-144">Elevator1!</label>
+			<nail x="195" y="-51"/>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-365" y="-144">Elevator2!</label>
+			<nail x="-374" y="-59"/>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id15"/>
+			<label kind="guard" x="0" y="-229">H_E1 &lt; H_E2</label>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id14"/>
+			<label kind="guard" x="-272" y="-229">H_E1 &gt; H_E2</label>
+		</transition>
+	</template>
+	<template>
+		<name>CarUI</name>
+		<parameter>broadcast chan &amp;Open, broadcast chan &amp;Close, broadcast chan &amp;Call, broadcast chan &amp;FloorArrived</parameter>
+		<declaration>clock t;</declaration>
+		<location id="id17" x="0" y="0">
+			<name x="-51" y="-25">Start</name>
+		</location>
+		<location id="id18" x="-314" y="-93">
+			<name x="-323" y="-127">doorOpen</name>
+		</location>
+		<location id="id19" x="323" y="-229">
+			<name x="313" y="-263">CallingF3</name>
+		</location>
+		<location id="id20" x="323" y="-76">
+			<name x="313" y="-110">CallingF2</name>
+		</location>
+		<location id="id21" x="323" y="85">
+			<name x="314" y="102">CallingF1</name>
+		</location>
+		<location id="id22" x="323" y="238">
+			<name x="314" y="255">CallingFB</name>
+		</location>
+		<init ref="id17"/>
+		<transition>
+			<source ref="id22"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="76" y="119">FloorArrived?</label>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id22"/>
+			<label kind="synchronisation" x="144" y="238">Call?</label>
+			<nail x="0" y="238"/>
+		</transition>
+		<transition>
+			<source ref="id21"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="153" y="8">FloorArrived?</label>
+			<nail x="323" y="8"/>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id21"/>
+			<label kind="synchronisation" x="161" y="59">Call?</label>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="153" y="-25">FloorArrived?</label>
+			<nail x="323" y="-8"/>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id20"/>
+			<label kind="synchronisation" x="161" y="-68">Call?</label>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="76" y="-136">FloorArrived?</label>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="136" y="-246">Call?</label>
+			<nail x="0" y="-229"/>
+		</transition>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="-178" y="-119">Close?</label>
+			<nail x="-34" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id18"/>
+			<label kind="synchronisation" x="-204" y="-25">Open?</label>
+			<nail x="-297" y="0"/>
+		</transition>
+	</template>
+	<template>
+		<name>Controller</name>
+		<parameter>broadcast chan &amp;Call, broadcast chan &amp;FloorArrived, broadcast chan &amp;Open, broadcast chan &amp;Close</parameter>
+		<declaration>clock t;
+int callingDirection = 1;
+int queueDirection = 1;</declaration>
+		<location id="id23" x="-229" y="-136">
+			<name x="-306" y="-144">WaitCall</name>
+		</location>
+		<location id="id24" x="-229" y="51">
+			<name x="-297" y="42">Called</name>
+		</location>
+		<location id="id25" x="-76" y="-136">
+			<name x="-59" y="-144">DoorOpen</name>
+			<urgent/>
+		</location>
+		<location id="id26" x="-229" y="-323">
+			<name x="-323" y="-331">DoorClose</name>
+			<label kind="invariant" x="-289" y="-314">t&lt;=6</label>
+		</location>
+		<init ref="id23"/>
+		<transition>
+			<source ref="id26"/>
+			<target ref="id23"/>
+			<label kind="synchronisation" x="-221" y="-246">Close!</label>
+		</transition>
+		<transition>
+			<source ref="id25"/>
+			<target ref="id26"/>
+			<label kind="synchronisation" x="-67" y="-246">Open!</label>
+			<nail x="-76" y="-323"/>
+		</transition>
+		<transition>
+			<source ref="id24"/>
+			<target ref="id25"/>
+			<label kind="guard" x="-67" y="-51">callingDirection == queueDirection</label>
+			<label kind="synchronisation" x="-67" y="-26">FloorArrived!</label>
+			<nail x="-76" y="51"/>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id24"/>
+			<label kind="synchronisation" x="-221" y="-59">Call?</label>
+		</transition>
+	</template>
+	<system>broadcast chan Open, Close;
+broadcast chan Call, CallF3, CallF2, CallF1, CallFB;
+broadcast chan FloorArrived, ArriveF3, ArriveF2, ArriveF1, ArriveFB;
+broadcast chan Elevator1, Elevator2;
+// Place template instantiations here.
+door = Door(Open, Close);
+user = User(Open, Close, Call, CallF3, CallF2, CallF1, CallFB);
+scheduler = Scheduler(Elevator1, Elevator2);
+floorUI = FloorUI(Open, Close, Call, FloorArrived);
+carUI = CarUI(Open, Close, Call, FloorArrived);
+controller = Controller(Call, FloorArrived, Open, Close);
+// List one or more processes to be composed into a system.
+// system door, user, scheduler, carUIButton, floorUIButtons;
+system door, user, scheduler, floorUI, carUI, controller;</system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt; user.Called</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; user.ButtonPressed</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; user.ButtonPressed || user.Called</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; controller.DoorClose</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; controller.Called</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; carUI.doorOpen</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; carUI.CallingF2</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; floorUI.Called</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; floorUI.DoorOpen</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; floorUI.Arrived</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>A[] door.t &lt;= 5</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; door.doorClose</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>A[] not deadlock</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; door.doorOpen</formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
